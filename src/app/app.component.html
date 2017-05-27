@@ -1,3 +1,11 @@
 <h1>
-  {{title}}
+    {{title}}
 </h1>
+
+<input #searchBox id="search-box" (keyup)="search(searchBox.value)" />
+<div>
+    <div *ngFor="let result of results | async">
+        <h2><a href="{{result.site_url}}">{{result.site_name}}</a></h2>
+        <div>{{result.description}}</div>
+    </div>
+</div>
