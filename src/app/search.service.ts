@@ -82,6 +82,10 @@ export class SearchService {
         const lc_term = term.toLowerCase();
         const lc_site_name = site.siteName.toLowerCase();
 
+        if (!term) {
+            return false;
+        }
+
         let found = false;
         if (lc_site_name.includes(lc_term)) {
             found = true;
@@ -100,10 +104,20 @@ export class SearchService {
         return found;
     }
 
-    search(term: string): Observable<Site[]> {
+    private test_site_terms(site: any, terms: string): boolean {
+        const split_terms = terms.split(',');
+        for (const term of split_terms) {
+            if (this.test_site_term(site, term.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    search(terms: string): Observable<Site[]> {
         const results = new Array<Site>();
         for (const site of sites) {
-            if (this.test_site_term(site, term)) {
+            if (this.test_site_terms(site, terms)) {
                 const new_site = new Site();
                 new_site.id = site.id;
                 new_site.site_name = site.siteName;

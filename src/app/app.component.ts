@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
     }
 
   // Push a search term into the observable stream.
-  search(term: string): void {
-    this.search_terms.next(term);
+  search(terms: string): void {
+    this.search_terms.next(terms);
   }
 }
