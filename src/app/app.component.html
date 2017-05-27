@@ -1,11 +1,17 @@
-<h1>
-    {{title}}
-</h1>
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+    <a class="navbar-brand" href="#">
+        WGNHS - The Wild Goose-chase Needle in the Haystack Searcher
+    </a>
+</nav>
 
-<input #searchBox id="search-box" (keyup)="search(searchBox.value)" />
-<div>
-    <div *ngFor="let result of results | async">
-        <h2><a href="{{result.site_url}}">{{result.site_name}}</a></h2>
-        <div>{{result.description}}</div>
+<div class="container">
+    <h1>Search</h1>
+
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" />
+    <div>
+        <div *ngFor="let result of results | async">
+            <h2><a href="{{result.site_url}}">{{result.site_name}}</a></h2>
+            <div>{{result.description}}</div>
+        </div>
     </div>
 </div>
