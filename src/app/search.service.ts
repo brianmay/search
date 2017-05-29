@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
 
 import { Site } from './site';
 
@@ -67,7 +69,7 @@ const categories = [
 @Injectable()
 export class SearchService {
 
-    constructor() { }
+    constructor(private readonly http: Http) { }
 
     private get_category(id: number): any {
         for (const category of categories) {
@@ -114,18 +116,26 @@ export class SearchService {
         return false;
     }
 
-    search(terms: string): Observable<Site[]> {
+    private decode_site(site: any): Site {
+        const new_site = new Site();
+        new_site.id = site.id;
+        new_site.site_name = site.siteName;
+        new_site.site_url = `https://${ site.siteUrl }/`;
+        new_site.description = site.description;
+        return new_site;
+    }
+
+    private decode_list(site_list: any): Site[] {
         const results = new Array<Site>();
-        for (const site of sites) {
-            if (this.test_site_terms(site, terms)) {
-                const new_site = new Site();
-                new_site.id = site.id;
-                new_site.site_name = site.siteName;
-                new_site.site_url = `https://${ site.siteUrl }/`;
-                new_site.description = site.description;
-                results.push(new_site);
-            }
+        for (const site of site_list) {
+            results.push(this.decode_site(site));
         }
-        return Observable.of<Site[]>(results);
+        return results;
+    }
+
+    search(term: string): Observable<Site[]> {
+        return this.http
+               .get(`api/sites/?siteName=${term}`)
+               .map(response => this.decode_list(response.json().data));
     }
 }
